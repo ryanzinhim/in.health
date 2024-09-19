@@ -8,53 +8,28 @@ import { createGoal } from '../functions/create-goal'
 import z from 'zod'
 import { getWeekPendingGoals } from '../functions/getWeekPendingGoals'
 import { createGoalcompletion } from '../functions/create-goal-completion'
+import { createGoalRoute } from './routs/create-goal'
+import { createCompletionRoute } from './routs/create-completion'
+import { getPendingGoalsRoute } from './routs/get-pending-goals'
+import { getWeeksummaryRoute } from './routs/get-week-summary'
+import fastifyCors from '@fastify/cors'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+
+app.register(fastifyCors, {
+  origin: '*',
+})
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
-app.get('/pending-goals', async () => {
-  const pendingGoals = await getWeekPendingGoals()
-  return { pendingGoals }
-})
+app.register(createGoalRoute)
 
-app.post(
-  '/goals',
-  {
-    schema: {
-      body: z.object({
-        title: z.string(),
-        desiredWeeklyFrequency: z.number().int().min(1).max(7),
-      }),
-    },
-  },
+app.register(createCompletionRoute)
 
-  async request => {
-    const { title, desiredWeeklyFrequency } = request.body
-    await createGoal({
-      title,
-      desiredWeeklyFrequency,
-    })
-  }
-)
-app.post(
-  '/completions',
-  {
-    schema: {
-      body: z.object({
-        goalId: z.string(),
-      }),
-    },
-  },
-  async (request, reply) => {
-    const { goalId } = request.body
+app.register(getPendingGoalsRoute)
 
-    const result = await createGoalcompletion({
-      goalId,
-    })
-  }
-)
+app.register(getWeeksummaryRoute)
 
 app
   .listen({

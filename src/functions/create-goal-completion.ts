@@ -55,7 +55,7 @@ export async function createGoalcompletion({
     .values({ goalId })
     .returning()
 
-  const goalCompletion = result[0]
+  const goalCompletion = insertresult[0]
   return {
     goalCompletions,
   }
