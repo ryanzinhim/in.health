@@ -64,9 +64,10 @@ export async function getWeekSummary() {
         Number
       ),
       total:
-        sql`SELECT SUM(${goalsCreateUpToWeek.desiredWeeklyFrequency}) FROM ${goalsCreateUpToWeek}`.mapWith(
+        sql`(SELECT SUM(${goalsCreateUpToWeek.desiredWeeklyFrequency}) FROM ${goalsCreateUpToWeek})`.mapWith(
           Number
         ),
+
       goalsperday: sql`
         JSON_OBJECT_AGG(
          ${GoalsCompletedByWeekDay.completedAtDate},

@@ -7,7 +7,7 @@ import {
 import { createGoal } from '../functions/create-goal'
 import z from 'zod'
 import { getWeekPendingGoals } from '../functions/getWeekPendingGoals'
-import { createGoalcompletion } from '../functions/create-goal-completion'
+import { createGoalCompletion } from '../functions/create-goal-completion'
 import { createGoalRoute } from './routs/create-goal'
 import { createCompletionRoute } from './routs/create-completion'
 import { getPendingGoalsRoute } from './routs/get-pending-goals'

@@ -18,7 +18,7 @@ export async function getWeekPendingGoals() {
         id: goals.id,
         title: goals.title,
         desiredWeeklyFrequency: goals.desiredWeeklyFrequency,
-        createAt: goals.createdAt,
+        createdAt: goals.createdAt,
       })
       .from(goals)
       .where(lte(goals.createdAt, lastDayOfWeek))
@@ -46,13 +46,13 @@ export async function getWeekPendingGoals() {
       title: goalsCreateUpToWeek.title,
       desiredWeeklyFrequency: goalsCreateUpToWeek.desiredWeeklyFrequency,
       completionCount: sql`
-        COALECE(${goalCompletionCounts.completionCount}) /*sitaxe de sql*/
+        COALESCE(${goalCompletionCounts.completionCount}, 0)
         `.mapWith(Number),
     })
     .from(goalsCreateUpToWeek)
     .leftJoin(
       goalCompletionCounts,
-      eq(goalCompletionCounts.goalId, goalsCreateUpToWeek)
+      eq(goalCompletionCounts.goalId, goalsCreateUpToWeek.id)
     ) //caso nao tenha completa nenhuma meta o retorno vem 0
   return pendingGoals
 }
